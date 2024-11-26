@@ -1,0 +1,19 @@
+{
+  "name": "shortest-path",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "graphlib": "^2.1.8",
+    "mongodb": "^6.11.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "type": "module"
+}

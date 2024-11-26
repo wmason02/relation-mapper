@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortest Path</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Shortest Path Between <%= start %> and <%= end %></h1>
+        <% if (images.length > 0) { %>
+            <div class="path-container">
+                <% for (let i = 0; i < images.length; i++) { %>
+                    <div class="path-item">
+                        <img src="<%= images[i] %>" alt="Path Image <%= i + 1 %>" >
+                        <p class="path-caption"><%= images[i].caption %></p>
+                    </div>
+                    <% if (i < images.length - 1) { %>
+                        <div class="path-arrow">➡️</div>
+                    <% } %>
+                <% } %>
+            </div>
+        <% } else { %>
+            <p>No path found between <%= start %> and <%= end %>.</p>
+        <% } %>
+
+        <a href="/" class="btn">Search Again</a>
+    </div>
+</body>
+</html>

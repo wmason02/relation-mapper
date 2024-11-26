@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortest Path Finder</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Find the Shortest Path Between Two People</h1>
+        
+        <form id="path-form" action="/find_path" method="POST">
+            <div>
+                <label for="start">Start Person:</label>
+                <input type="text" id="start-name" name="startName" list="start-names" autocomplete="off" required>
+                <input type="hidden" id="start-id" name="startId">
+                <datalist id="start-names"></datalist>
+            </div>
+            <div>
+                <label for="end">End Person:</label>
+                <input type="text" id="end-name" name="endName" list="end-names" autocomplete="off" required>
+                <input type="hidden" id="end-id" name="endId">
+                <datalist id="end-names"></datalist>
+            </div>
+            <button type="submit" class="btn">Find Path</button>
+        </form>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                let namesData = [];
+                fetch('/names')
+                    .then(response => response.json())
+                    .then(data => {
+                        namesData = data;
+                    })
+                    .catch(error => console.error('Error fetching names:', error));
+
+                function filterNames(inputValue) {
+                    return namesData
+                        .filter(person => person.name.toLowerCase().includes(inputValue.toLowerCase()))
+                        .slice(0, 5);
+                }
+
+                function updateDatalist(inputId, datalistId) {
+                    const inputElement = document.getElementById(inputId);
+                    const dataList = document.getElementById(datalistId);
+                    const filteredNames = filterNames(inputElement.value);
+
+                    dataList.innerHTML = '';
+                    filteredNames.forEach(person => {
+                        const option = document.createElement('option');
+                        option.value = person.name;
+                        dataList.appendChild(option);
+                    });
+                }
+
+                document.getElementById('start-name').addEventListener('input', function() {
+                    updateDatalist('start-name', 'start-names');
+                    const startId = findIdByName(this.value);
+                    document.getElementById('start-id').value = startId;
+                });
+
+                document.getElementById('end-name').addEventListener('input', function() {
+                    updateDatalist('end-name', 'end-names');
+                    const endId = findIdByName(this.value);
+                    document.getElementById('end-id').value = endId;
+                });
+
+                function findIdByName(name) {
+                    const person = namesData.find(p => p.name.toLowerCase() === name.toLowerCase());
+                    return person ? person._id : null;
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
