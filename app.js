@@ -122,7 +122,10 @@ app.post('/find_path', (req, res) => {
         for (let i = 0; i < path.length - 1; i++) {
             const edge = graph.edge(path[i], path[i + 1]);
             if (edge) {
-                images.push(edge.image);
+                images.push({
+                    image: edge.image,
+                    caption: `${graph.node(path[i]).name} and ${graph.node(path[i + 1]).name}`
+                });
             }
         }
 
@@ -172,7 +175,6 @@ app.get('/names', async (req, res) => {
 
     const names = await nodesCollection
         .find({ name: { $regex: query, $options: 'i' } }) // Case-insensitive search
-        .limit(50) // Limit to top 50 matches
         .toArray();
 
     res.json(names.map(node => ({ _id: node._id, name: node.name })));

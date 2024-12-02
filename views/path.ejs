@@ -13,7 +13,7 @@
             <div class="path-container">
                 <% for (let i = 0; i < images.length; i++) { %>
                     <div class="path-item">
-                        <img src="<%= images[i] %>" alt="Path Image <%= i + 1 %>" >
+                        <img src="<%= images[i].image %>" alt="Path Image <%= i + 1 %>" >
                         <p class="path-caption"><%= images[i].caption %></p>
                     </div>
                     <% if (i < images.length - 1) { %>
