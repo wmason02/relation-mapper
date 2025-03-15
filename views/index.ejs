@@ -24,6 +24,7 @@
                 <datalist id="end-names"></datalist>
             </div>
             <button type="submit" class="btn">Find Path</button>
+            <button type="button" id="random-pair-btn" class="btn">Random</button>
         </form>
         
         <script>
@@ -71,6 +72,18 @@
                     const person = namesData.find(p => p.name.toLowerCase() === name.toLowerCase());
                     return person ? person._id : null;
                 }
+
+                document.getElementById('random-pair-btn').addEventListener('click', function() {
+                    const index1 = Math.floor(Math.random() * namesData.length);
+                    let index2;
+                    do {
+                        index2 = Math.floor(Math.random() * namesData.length);
+                    } while (index2 === index1);
+                    document.getElementById('start-name').value = namesData[index1].name;
+                    document.getElementById('start-id').value = namesData[index1]._id;
+                    document.getElementById('end-name').value = namesData[index2].name;
+                    document.getElementById('end-id').value = namesData[index2]._id;
+                });
             });
         </script>
     </div>

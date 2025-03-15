@@ -58,7 +58,7 @@ button.btn, a.btn {
     padding: 10px 20px;
     font-size: 1rem;
     color: #fff;
-    background: #007bff; /* Blue color */
+    background: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -69,6 +69,11 @@ button.btn, a.btn {
 
 button.btn:hover, a.btn:hover {
     background: #0056b3; /* Darker blue on hover */
+}
+
+#random-pair-btn {
+    width: 100px;
+    text-align: center;
 }
 
 /* Path Display */
