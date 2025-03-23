@@ -13,13 +13,17 @@
             <!-- Input for Person 1 -->
             <div class="form-group">
                 <label for="person1">Person 1:</label>
-                <input type="text" id="person1" name="person1" placeholder="Enter name of person 1" required>
+                <input type="text" id="person1" name="person1" placeholder="Enter name of person 1" list="person1-names" required>
+                <input type="hidden" id="person1-id" name="person1Id">
+                <datalist id="person1-names"></datalist>
             </div>
 
             <!-- Input for Person 2 -->
             <div class="form-group">
                 <label for="person2">Person 2:</label>
-                <input type="text" id="person2" name="person2" placeholder="Enter name of person 2" required>
+                <input type="text" id="person2" name="person2" placeholder="Enter name of person 2" list="person2-names" required>
+                <input type="hidden" id="person2-id" name="person2Id">
+                <datalist id="person2-names"></datalist>
             </div>
 
             <!-- Drag and Drop Zone -->
@@ -39,6 +43,56 @@
     </div>
 
     <script>
+        let namesData = [];
+
+        // Fetch names from the backend
+        async function fetchNames() {
+            try {
+                const response = await fetch('/names');
+                namesData = await response.json();
+            } catch (error) {
+                console.error('Error fetching names:', error);
+            }
+        }
+
+        // Filter names based on user input
+        function filterNames(inputValue) {
+            return namesData
+                .filter(person => person.name.toLowerCase().includes(inputValue.toLowerCase()))
+                .slice(0, 5);
+        }
+
+        // Update datalist and set ID
+        function updateDatalist(inputId, datalistId, hiddenInputId) {
+            const inputElement = document.getElementById(inputId);
+            const dataList = document.getElementById(datalistId);
+            const hiddenInput = document.getElementById(hiddenInputId);
+
+            const filteredNames = filterNames(inputElement.value);
+
+            dataList.innerHTML = ''; // Clear previous suggestions
+            filteredNames.forEach(person => {
+                const option = document.createElement('option');
+                option.value = person.name;
+                dataList.appendChild(option);
+            });
+
+            // Set ID if name exists
+            const person = namesData.find(p => p.name === inputElement.value);
+            hiddenInput.value = person ? person._id : '';
+        }
+
+        document.getElementById('person1').addEventListener('input', () => {
+            updateDatalist('person1', 'person1-names', 'person1-id');
+        });
+
+        document.getElementById('person2').addEventListener('input', () => {
+            updateDatalist('person2', 'person2-names', 'person2-id');
+        });
+
+        // Load names once the page loads
+        document.addEventListener('DOMContentLoaded', fetchNames);
+
         const dropZone = document.getElementById('dropZone');
         const imageInput = document.getElementById('image');
         const preview = document.getElementById('preview');

@@ -59,43 +59,55 @@ app.get('/upload', (req, res) => {
 })
 
 app.post('/upload', upload.single('image'), async (req, res) => {
-    const { person1, person2 } = req.body;
+    const { person1, person2, person1Id, person2Id } = req.body;
 
-    // Ensure the names are in alphabetical order
-    const [firstPerson, secondPerson] = [person1, person2].sort((a, b) => a.localeCompare(b));
+    // Create IDs if they don't exist
+    const generatedId1 = person1Id || person1.replace(/\s+/g, '_');
+    const generatedId2 = person2Id || person2.replace(/\s+/g, '_');
 
-    // Paths for renaming the uploaded file
+    // Ensure names are in alphabetical order
+    const [firstPerson, secondPerson] =
+        generatedId1.localeCompare(generatedId2) < 0
+            ? [generatedId1, generatedId2]
+            : [generatedId2, generatedId1];
+
     const oldPath = req.file.path;
     const fileExtension = path.extname(req.file.originalname) || '.jpg';
-    const newFileName = `${firstPerson.replace(/\s/g, '_')}_${secondPerson.replace(/\s/g, '_')}${fileExtension}`;
+    const newFileName = `${firstPerson}_${secondPerson}${fileExtension}`;
     const newPath = path.join(import.meta.dirname, 'public', 'images', newFileName);
 
     const db = client.db(dbName);
 
     try {
-        // Insert or Update Nodes
         const nodesCollection = db.collection('nodes');
         const edgesCollection = db.collection('edges');
 
-        const node1 = { _id: firstPerson.replace(/\s/g, '_'), name: firstPerson };
-        const node2 = { _id: secondPerson.replace(/\s/g, '_'), name: secondPerson };
+        // Insert or update nodes
+        await nodesCollection.updateOne(
+            { _id: generatedId1 },
+            { $set: { _id: generatedId1, name: person1 } },
+            { upsert: true }
+        );
 
-        await nodesCollection.updateOne({ _id: node1._id }, { $set: node1 }, { upsert: true });
-        await nodesCollection.updateOne({ _id: node2._id }, { $set: node2 }, { upsert: true });
+        await nodesCollection.updateOne(
+            { _id: generatedId2 },
+            { $set: { _id: generatedId2, name: person2 } },
+            { upsert: true }
+        );
 
-        // Insert or Update Edge
-        const edge = { nodes: [node1._id, node2._id], image: `images/${newFileName}` };
+        // Insert or update edge
+        const edge = { nodes: [generatedId1, generatedId2], image: `images/${newFileName}` };
         await edgesCollection.updateOne(
             { nodes: edge.nodes },
             { $set: edge },
             { upsert: true }
         );
 
-        // Update Graph
-        graph.setNode(node1._id, { name: firstPerson });
-        graph.setNode(node2._id, { name: secondPerson });
-        graph.setEdge(node1._id, node2._id, { image: `images/${newFileName}` });
-        graph.setEdge(node2._id, node1._id, { image: `images/${newFileName}` });
+        // Update graph
+        graph.setNode(generatedId1, { name: person1 });
+        graph.setNode(generatedId2, { name: person2 });
+        graph.setEdge(generatedId1, generatedId2, { image: `images/${newFileName}` });
+        graph.setEdge(generatedId2, generatedId1, { image: `images/${newFileName}` });
 
         // Rename the uploaded file
         await rename(oldPath, newPath);
