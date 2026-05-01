@@ -23,8 +23,14 @@
                 <input type="hidden" id="end-id" name="endId">
                 <datalist id="end-names"></datalist>
             </div>
-            <button type="submit" class="btn">Find Path</button>
-            <button type="button" id="random-pair-btn" class="btn">Random</button>
+            <div class="form-buttons">
+                <button type="submit" class="btn full-width">Find Path</button>
+
+                <div class="bottom-buttons">
+                    <button type="button" id="random-pair-btn" class="btn small-btn">Random</button>
+                    <button type="button" id="view-connections-btn" class="btn small-btn align-right">View Connections</button>
+                </div>
+            </div>
         </form>
         
         <script>
@@ -83,6 +89,15 @@
                     document.getElementById('start-id').value = namesData[index1]._id;
                     document.getElementById('end-name').value = namesData[index2].name;
                     document.getElementById('end-id').value = namesData[index2]._id;
+                });
+
+                document.getElementById('view-connections-btn').addEventListener('click', () => {
+                    const startId = document.getElementById('start-id').value;
+                    if (!startId) {
+                        alert('Please select a person first!');
+                        return;
+                    }
+                    window.location.href = `/connections?personId=${startId}`;
                 });
             });
         </script>

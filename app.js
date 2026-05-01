@@ -120,6 +120,51 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     }
 });
 
+// View connections route
+app.get('/connections', async (req, res) => {
+    const personId = req.query.personId;
+
+    if (!personId) {
+        return res.status(400).send("Missing person ID");
+    }
+
+    const db = client.db(dbName);
+    const nodesCollection = db.collection('nodes');
+    
+    try {
+        // Get the node details (to show the person's name)
+        const person = await nodesCollection.findOne({ _id: personId });
+
+        if (!person) {
+            return res.status(404).send("Person not found");
+        }
+
+        // Find all direct connections using the graph
+        const connections = graph.successors(personId) || [];
+        const connectedPeople = [];
+
+        for (const connectedId of connections) {
+            const connectedPerson = await nodesCollection.findOne({ _id: connectedId });
+            const edge = graph.edge(personId, connectedId);
+
+            if (connectedPerson && edge) {
+                connectedPeople.push({
+                    name: connectedPerson.name,
+                    image: edge.image
+                });
+            }
+        }
+
+        res.render('connections', {
+            person: person.name,
+            connections: connectedPeople
+        });
+    } catch (error) {
+        console.error("Error fetching connections:", error);
+        res.status(500).send("Error fetching connections");
+    }
+});
+
 // Find Path Route
 app.post('/find_path', (req, res) => {
     const startId = req.body.startId;
@@ -147,6 +192,17 @@ app.post('/find_path', (req, res) => {
     }
 });
 
+function shuffleArray(array) {
+    const copy = [...array];
+
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+
+    return copy;
+}
+
 function findShortestPath(start, end) {
     const queue = [start];
     const visited = new Set();
@@ -167,7 +223,7 @@ function findShortestPath(start, end) {
 
         visited.add(current);
 
-        const neighbors = graph.successors(current) || [];
+        const neighbors = shuffleArray(graph.successors(current) || []);
         for (const neighbor of neighbors) {
             if (!visited.has(neighbor)) {
                 visited.add(neighbor);
