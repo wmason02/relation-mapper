@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shortest Path Finder</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -18,28 +17,22 @@
         <form id="path-form" action="/find_path" method="POST">
             <div class="field">
                 <label for="start-name">Start Person</label>
-                <div class="input-icon">
-                    <span class="icon">🧑</span>
-                    <input type="text" id="start-name" name="startName" list="start-names" placeholder="Search a name..." autocomplete="off" required>
-                </div>
+                <input type="text" id="start-name" name="startName" list="start-names" placeholder="Search a name..." autocomplete="off" required>
                 <input type="hidden" id="start-id" name="startId">
                 <datalist id="start-names"></datalist>
             </div>
             <div class="field">
                 <label for="end-name">End Person</label>
-                <div class="input-icon">
-                    <span class="icon">🧑</span>
-                    <input type="text" id="end-name" name="endName" list="end-names" placeholder="Search a name..." autocomplete="off" required>
-                </div>
+                <input type="text" id="end-name" name="endName" list="end-names" placeholder="Search a name..." autocomplete="off" required>
                 <input type="hidden" id="end-id" name="endId">
                 <datalist id="end-names"></datalist>
             </div>
             <div class="form-buttons">
-                <button type="submit" class="btn full-width">🔍 Find Path</button>
+                <button type="submit" class="btn full-width">Find Path</button>
 
                 <div class="bottom-buttons">
-                    <button type="button" id="random-pair-btn" class="btn btn-outline">🎲 Random</button>
-                    <button type="button" id="view-connections-btn" class="btn btn-outline">👥 View Connections</button>
+                    <button type="button" id="random-pair-btn" class="btn btn-outline">Random</button>
+                    <button type="button" id="view-connections-btn" class="btn btn-outline">View Connections</button>
                 </div>
             </div>
         </form>
