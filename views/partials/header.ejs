@@ -1,0 +1,14 @@
+<header class="site-header">
+    <a href="/" class="brand"><span class="brand-mark">🔗</span><span class="brand-label">Shortest Path</span></a>
+    <nav class="site-nav">
+        <a href="/" data-path="/">Find Path</a>
+        <a href="/upload" data-path="/upload">Add Connection</a>
+    </nav>
+</header>
+<script>
+    document.querySelectorAll('.site-nav a').forEach(link => {
+        if (link.dataset.path === window.location.pathname) {
+            link.classList.add('active');
+        }
+    });
+</script>

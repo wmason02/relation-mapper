@@ -3,31 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload</title>
+    <title>Add Connection</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+    <%- include('partials/header') %>
     <div class="container">
-        <h1>Create Connection</h1>
+        <div class="hero">
+            <span class="eyebrow">Add a photo</span>
+            <h1>Create a Connection</h1>
+            <p class="subtitle">Add two people and a photo of them together to link them in the graph.</p>
+        </div>
         <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
             <!-- Input for Person 1 -->
-            <div class="form-group">
-                <label for="person1">Person 1:</label>
-                <input type="text" id="person1" name="person1" placeholder="Enter name of person 1" list="person1-names" required>
+            <div class="field">
+                <label for="person1">Person 1</label>
+                <div class="input-icon">
+                    <span class="icon">🧑</span>
+                    <input type="text" id="person1" name="person1" placeholder="Enter name of person 1" list="person1-names" autocomplete="off" required>
+                </div>
                 <input type="hidden" id="person1-id" name="person1Id">
                 <datalist id="person1-names"></datalist>
             </div>
 
             <!-- Input for Person 2 -->
-            <div class="form-group">
-                <label for="person2">Person 2:</label>
-                <input type="text" id="person2" name="person2" placeholder="Enter name of person 2" list="person2-names" required>
+            <div class="field">
+                <label for="person2">Person 2</label>
+                <div class="input-icon">
+                    <span class="icon">🧑</span>
+                    <input type="text" id="person2" name="person2" placeholder="Enter name of person 2" list="person2-names" autocomplete="off" required>
+                </div>
                 <input type="hidden" id="person2-id" name="person2Id">
                 <datalist id="person2-names"></datalist>
             </div>
 
             <!-- Drag and Drop Zone -->
-            <div id="dropZone" class="drop-zone">
+            <div id="dropZone" class="drop-zone" tabindex="0">
+                <span class="drop-zone-icon">📸</span>
+                <p class="drop-zone-text">Drag &amp; drop a photo here, paste, or click to browse</p>
                 <input type="file" id="image" name="image" accept="image/*" required>
             </div>
 
@@ -35,11 +49,11 @@
             <div id="preview" class="preview"></div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn">Upload</button>
+            <button type="submit" class="btn full-width">⬆️ Upload</button>
         </form>
 
         <!-- Back Button -->
-        <a href="/" class="btn">Go Back</a>
+        <a href="/" class="btn btn-secondary">Go Back</a>
     </div>
 
     <script>

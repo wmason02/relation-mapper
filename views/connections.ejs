@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= person %>'s Connections</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+    <%- include('partials/header') %>
     <div class="container">
-        <h1>Connections for <%= person %></h1>
+        <div class="hero">
+            <span class="eyebrow">Direct connections</span>
+            <h1><%= person %></h1>
+            <p class="subtitle"><%= connections.length %> direct connection<%= connections.length === 1 ? '' : 's' %> found</p>
+        </div>
 
         <% if (connections.length > 0) { %>
             <div class="connections-container">
@@ -20,10 +26,10 @@
                 <% }) %>
             </div>
         <% } else { %>
-            <p>No connections found.</p>
+            <p class="empty-state">No connections found.</p>
         <% } %>
 
-        <a href="/" class="btn">Go Back</a>
+        <a href="/" class="btn btn-secondary">Go Back</a>
     </div>
 </body>
 </html>
